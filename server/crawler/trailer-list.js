@@ -10,6 +10,7 @@ let res = async () => {
   console.log('Start visit the target page');
 
   const browser = await puppeteer.launch({
+    // executablePath: 'D:/Node JS/chrome-win',
     args: ['--no-sandbox'],
     dumpio: false
   })
@@ -30,15 +31,17 @@ let res = async () => {
 
   const result = await page.evaluate(() => {
     var $ = window.$
-    var items = $('.list-wp a')
+    var items = $('.list-wp .item')
     var links = []
-
+    console.log(items, 'items')
     if (items.length >= 1) {
+      
       items.each((index, item) => {
         let it = $(item)
+
         let doubanId = it.find('div').data('id')
-        let title = it.find('.title').text()
-        let rate = Number(it.find('.rate').text())
+        let title = it.find('img').attr('alt')
+        let rate = Number(it.find('strong').text())
         let poster = it.find('img').attr('src').replace('s_ratio', 'l_ratio')
 
         links.push({
@@ -53,7 +56,8 @@ let res = async () => {
   })
   browser.close()
 
-  console.log(result)
+  process.send({result})
+  process.exit(0)
 }
 
 res()

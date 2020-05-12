@@ -20,3 +20,9 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+##  国内带Chromium安装使用：npm install puppeteer-chromium-resolver --save
+
+##  npm i puppeteer-core
+
+##  npm install  puppeteer-cn
