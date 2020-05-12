@@ -3,7 +3,6 @@ const { resolve } = require('path')
 
 
 const path = '../crawler/trailer-list'
-console.log(resolve(__dirname,  path), 1122)
 ;(async () => {
   const script = resolve(__dirname,  path)
   const child = cp.fork(script, [])
