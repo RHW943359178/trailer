@@ -3,7 +3,8 @@ const rp = require('request-promise-native')
 //  http://api.douban.com/v2/movie/in_theaters?apikey=0df993c66c0c636e29ecbb5344252a4a&start=0&count=10
 
 async function fetchMovie (item) {
-  const url = `http://api.douban.com/v2/movie/subject/${item.doubanId}`
+  // const url = `http://api.douban.com/v2/movie/subject/${item.doubanId}`
+  const url = `https://api.douban.com/v2/movie/subject/${item.doubanId}?apikey=0df993c66c0c636e29ecbb5344252a4a`
   // const url = `http://api.douban.com/v2/movie/in_theaters?apikey=0df993c66c0c636e29ecbb5344252a4a&start=0&count=10${item.doubanId}`
   const res = await rp(url)
   return res
@@ -30,6 +31,7 @@ async function fetchMovie (item) {
 
     try {
       movieData = JSON.parse(movieData)
+      console.log(movieData, 11)
       console.log(movieData.tags)
       console.log(movieData.summary)
     } catch (err) {
