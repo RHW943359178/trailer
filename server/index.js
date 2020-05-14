@@ -1,6 +1,18 @@
 const Koa = require('koa')
 const consola = require('consola')
+const mongoose = require('mongoose')
 const { Nuxt, Builder } = require('nuxt')
+const { connect, initSchema } = require('./dbs/init')
+
+;(async () => {
+  await connect()
+
+  initSchema()
+
+  // require('./tasks/movie')
+  require('./tasks/api')
+
+})()
 
 const app = new Koa()
 
