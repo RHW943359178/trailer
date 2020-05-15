@@ -2,6 +2,7 @@ const Koa = require('koa')
 const consola = require('consola')
 const mongoose = require('mongoose')
 const { Nuxt, Builder } = require('nuxt')
+const router = require('./router')
 const { connect, initSchema } = require('./dbs/init')
 
 ;(async () => {
@@ -36,12 +37,16 @@ async function start () {
     await builder.build()
   }
 
+  app
+    .use(router.routes())
+    .use(router.allowedMethods())
+
   app.use((ctx) => {
-    ctx.status = 200
-    ctx.respond = false // Bypass Koa's built-in response handling
-    ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
-    nuxt.render(ctx.req, ctx.res)
-  })
+      ctx.status = 200
+      ctx.respond = false // Bypass Koa's built-in response handling
+      ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
+      nuxt.render(ctx.req, ctx.res)
+    })
 
   app.listen(port, host)
   consola.ready({

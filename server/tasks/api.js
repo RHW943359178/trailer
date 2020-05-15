@@ -17,34 +17,21 @@ async function fetchMovie (item) {
   } catch (err) {
     console.log(err)
   }
-
   return body
 }
 
 ;(async () => {
-  // let movies = [
-  //   {
-  //     doubanId: 30166972,
-  //     title: '少年的你',
-  //     rate: 8.3,
-  //     poster: 'https://img3.doubanio.com/view/photo/l_ratio_poster/public/p2572166063.jpg'
-  //   },
-  //   {
-  //     doubanId: 30292777,
-  //     title: '阳光普照',
-  //     rate: 8.4,
-  //     poster: 'https://img3.doubanio.com/view/photo/l_ratio_poster/public/p2570235120.jpg'
-  //   }
-  // ]
 
   let movies = await Movie.find({
     $or: [
       { summary: { $exists: false } },
       { summary: null },
+      { year: { $exists: false } },
       { title: '' },
       { summary: '' },
     ]
   })
+
 
   for (let i = 0; i < [movies[0]].length; i++) {
     let movie = movies[i]
@@ -53,13 +40,14 @@ async function fetchMovie (item) {
     if (movieData) {
       let tags = movieData.tags || []
 
-      movie.tags = tags
+      movie.tags = movie.tags || []
       movie.summary = movieData.summary || ''
       movie.title = movieData.alt_title || movieData.title || ''
       movie.rawTitle = movieData.title || ''
 
       if (movieData.attrs) {
         movie.movieTypes = movieData.attrs.movie_type || []
+        movie.year = movieData.title || 2500
 
         for (let i = 0;  i < movie.movieTypes.length; i++) {
           let item = movie.movieTypes[i]
