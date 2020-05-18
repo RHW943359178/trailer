@@ -2,7 +2,7 @@ const Koa = require('koa')
 const consola = require('consola')
 const mongoose = require('mongoose')
 const { Nuxt, Builder } = require('nuxt')
-const router = require('./router')
+const router = require('./router/movie')
 const { connect, initSchema } = require('./dbs/init')
 
 ;(async () => {
