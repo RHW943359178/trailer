@@ -1,6 +1,11 @@
 const Router = require('koa-router')
-const { reaolve, resolve } = require('path')
+const { resolve } = require('path')
+const _ = require('lodash')
 const glob = require('glob')
+
+const routerMap = new Map()
+
+const isArray = c => _.isArray(c) ? c : [c]
 
 /**
  * ES6新增数据类型 Symbol，字符标识，一旦创建就不能修改
@@ -16,7 +21,58 @@ export class Route {
 
   init () {
     glob.sync(resolve(this.apiPath, '.**/*.js')).forEach(require)
+
+    for (let [conf, controller] of routerMap) {
+      const controllers = isArray(controller)
+      const prefixPath = conf.target[symbolPrefix]
+      if (prefixPath) {
+        // prefixPath = normalizePath(prefixPath)
+      }
+
+      const routerPath = prefixPath + conf.path
+      this.router[conf.method](routerPath, ...controllers)
+    }
+
+    this.app.use(this.router.routes())
+    this.app.use(this.router.allowedMethods())
   }
 }
 
-const controller = path => target => (target.prototype[symbolPrefix] = path)
+const normalizePath = path => path.startsWith('/') ? path : `/${path}`
+
+const router = conf => (target, key, descriptor) => {
+  conf.path = normalizePath(conf.path)
+
+  routerMap.set({
+    target: target,
+    ...conf
+  }, target[key])
+}
+
+
+export const controller = path => target => (target.prototype[symbolPrefix] = path)
+
+export const get = path => router({
+  method: 'get',
+  path: path,
+})
+
+export const put = path => router({
+  method: 'put',
+  path: path,
+})
+
+export const del = path => router({
+  method: 'del',
+  path: path,
+})
+
+export const use = path => router({
+  method: 'use',
+  path: path,
+})
+
+export const all = path => router({
+  method: 'all',
+  path: path,
+})

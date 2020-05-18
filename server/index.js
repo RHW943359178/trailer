@@ -4,23 +4,45 @@ const mongoose = require('mongoose')
 const { Nuxt, Builder } = require('nuxt')
 const router = require('./router/movie')
 const { connect, initSchema } = require('./dbs/init')
+const R = require('ramda')
+const MIDDLEWARE = ['router']
 
-;(async () => {
-  await connect()
+const useMiddleware = app => {
+  R.map(
+    R.compose(
+      R.forEachObjIndexed(
+        initWith => initWith(app)
+      ),
+      require,
+      name => resolve(__dirname, `../middleware/${name}`)
+    )
+  )(MIDDLEWARE)
+}
 
-  initSchema()
+// ;(async () => {
+//   await connect()
 
-  // require('./tasks/movie')
-  require('./tasks/api')
+//   initSchema()
 
-})()
+//   // await initAdmin()
 
-const app = new Koa()
+//   // require('./tasks/movie')
+//   // require('./tasks/api')
+
+//   const app = new Koa()
+//   await useMiddleware(app)
+
+// })()
+
+
+
+
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
 config.dev = app.env !== 'production'
 
+// async function start () {
 async function start () {
   // Instantiate nuxt.js
   const nuxt = new Nuxt(config)
@@ -37,9 +59,21 @@ async function start () {
     await builder.build()
   }
 
-  app
-    .use(router.routes())
-    .use(router.allowedMethods())
+  // app
+  //   .use(router.routes())
+  //   .use(router.allowedMethods())
+
+  await connect()
+
+  initSchema()
+
+  // await initAdmin()
+
+  // require('./tasks/movie')
+  // require('./tasks/api')
+
+  const app = new Koa()
+  await useMiddleware(app)
 
   app.use((ctx) => {
       ctx.status = 200

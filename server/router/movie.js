@@ -1,30 +1,48 @@
 const Router = require('koa-router')
-const mongoose = require('mongoose')
-// const Movie = mongoose.model('Movie')
+const { 
+  controller, 
+  get, 
+  post, 
+  put 
+} = require('../lib/decorator.js')
+const { 
+  getAllMovies,
+  getMovieDetail,
+  getRelativeMovies 
+} = require('../service/movie.js')
 
 const router = new Router()
 
-//  获取全部电影列表
-router.get('/movie/all', async (ctx, next) => {
-  const Movie = mongoose.model('Movie')
-  const movies = await Movie.find({}).sort({
-    'meta.createdAt': -1
-  })
+@controller('api/v0/movies')
+export class movieController {
+  @get('/')
+  // @login
+  @admin(['developer'])
+  // @log
+  async getMovies (ctx, next) {
+    const { type, year } = ctx.query
+    const movies = await getAllMovies(type, year)
 
-  ctx.body = {
-    movies
+    ctx.body = {
+      movies
+    }
   }
-})
 
-//  根据id获取电影详情
-router.get('/movie/detail/:id', async (ctx, next) => {
-  const Movie = mongoose.model('Movie')
-  const id = ctx.params.id
-  const movie = await Movie.findOne({_id: id})
-
-  ctx.body = {
-    movie
+  
+  @get('/:id')
+  async getMovieDetail (ctx, next) {
+    const id = ctx.params.id
+    const movie = await getMovieDetail(id)
+    const relativeMovies = await getRelativeMovies(movie)
+  
+    ctx.body = {
+      data: {
+        movie,
+        relativeMovies
+      },
+      success: true
+    }
   }
-})
+}
 
 module.exports = router
