@@ -1,12 +1,7 @@
 <template>
   <div class="m-header-navigator">
     <ul>
-      <!-- <router-link v-for="item in navigators" active-class="active" exact :key="item.id" :to="item.url">
-        <li>{{ item.label }}</li>
-      </router-link> -->
-      <li v-for="item in navigators" :key="item.id">
-        <router-link active-class="active" tag="li" exact :to="item.url">{{ item.label }}</router-link>
-      </li>
+      <router-link v-for="item in navigators" :key="item.id" active-class="active" tag="li" exact :to="item.url">{{ item.label }}</router-link>
     </ul>
     <div class="m-header-search">
       <el-input id="input" v-model="searchInfo" size="medium" @focus="focus" @blur="blur" placeholder="电影搜索"></el-input>
