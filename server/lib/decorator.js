@@ -20,13 +20,14 @@ export class Route {
   }
 
   init () {
-    glob.sync(resolve(this.apiPath, '.**/*.js')).forEach(require)
+    console.log(this.apiPath, 555555)
+    glob.sync(resolve(this.apiPath, './*.js')).forEach(require)
 
     for (let [conf, controller] of routerMap) {
       const controllers = isArray(controller)
-      const prefixPath = conf.target[symbolPrefix]
+      let prefixPath = conf.target[symbolPrefix]
       if (prefixPath) {
-        // prefixPath = normalizePath(prefixPath)
+        prefixPath = normalizePath(prefixPath)
       }
 
       const routerPath = prefixPath + conf.path
@@ -59,6 +60,11 @@ export const get = path => router({
 
 export const put = path => router({
   method: 'put',
+  path: path,
+})
+
+export const post = path => router({
+  method: 'post',
   path: path,
 })
 

@@ -11,13 +11,14 @@ const {
   getRelativeMovies 
 } = require('../service/movie.js')
 
-const router = new Router()
+
+console.log('我是router/movie.js')
 
 @controller('api/v0/movies')
 export class movieController {
   @get('/')
   // @login
-  @admin(['developer'])
+  // @admin(['developer'])
   // @log
   async getMovies (ctx, next) {
     const { type, year } = ctx.query
@@ -44,5 +45,3 @@ export class movieController {
     }
   }
 }
-
-module.exports = router

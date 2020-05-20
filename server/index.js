@@ -2,10 +2,11 @@ const Koa = require('koa')
 const consola = require('consola')
 const mongoose = require('mongoose')
 const { Nuxt, Builder } = require('nuxt')
-const router = require('./router/movie')
 const { connect, initSchema } = require('./dbs/init')
+const { resolve } = require('path')
 const R = require('ramda')
 const MIDDLEWARE = ['router']
+
 
 const useMiddleware = app => {
   R.map(
@@ -36,7 +37,7 @@ const useMiddleware = app => {
 
 
 
-
+const app = new Koa()
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
@@ -62,17 +63,16 @@ async function start () {
   // app
   //   .use(router.routes())
   //   .use(router.allowedMethods())
-
+  initSchema()
   await connect()
 
-  initSchema()
+  
 
   // await initAdmin()
 
   // require('./tasks/movie')
   // require('./tasks/api')
 
-  const app = new Koa()
   await useMiddleware(app)
 
   app.use((ctx) => {
