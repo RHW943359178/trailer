@@ -49,12 +49,12 @@ exports.connect = () => {
     })
 
     mongoose.connection.on('open', () => {
-      const Dog = mongoose.model('Dog', {name: String})
-      const dog = new Dog({name: '阿尔法'})
+      // const Dog = mongoose.model('Dog', {name: String})
+      // const dog = new Dog({name: '阿尔法'})
 
-      dog.save().then(() => {
-        console.log('wang')
-      })
+      // dog.save().then(() => {
+      //   console.log('wang')
+      // })
 
       resolve()
       console.log('MongoDB Connected Successfully!')

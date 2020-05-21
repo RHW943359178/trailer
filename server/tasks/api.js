@@ -1,14 +1,13 @@
 const rp = require('request-promise-native')
-const mongoose = require('mongoose')
-const Movie = mongoose.model('Movie')
-const Category = mongoose.model('Category')
+// const mongoose = require('mongoose')
+// const { initSchema, connect } = require('../dbs/init')
+// const Movie = mongoose.model('Movie')
+// const Category = mongoose.model('Category')
 
-//  http://api.douban.com/v2/movie/in_theaters?apikey=0df993c66c0c636e29ecbb5344252a4a&start=0&count=10
+
 
 async function fetchMovie (item) {
-  // const url = `http://api.douban.com/v2/movie/subject/${item.doubanId}`
   const url = `https://api.douban.com/v2/movie/subject/${item.doubanId}?apikey=0df993c66c0c636e29ecbb5344252a4a`
-  // const url = `http://api.douban.com/v2/movie/in_theaters?apikey=0df993c66c0c636e29ecbb5344252a4a&start=0&count=10${item.doubanId}`
   const res = await rp(url)
 
   let body
@@ -21,7 +20,6 @@ async function fetchMovie (item) {
 }
 
 ;(async () => {
-
   let movies = await Movie.find({
     $or: [
       { summary: { $exists: false } },
@@ -33,7 +31,7 @@ async function fetchMovie (item) {
   })
 
 
-  for (let i = 0; i < [movies[0]].length; i++) {
+  for (let i = 0; i < movies.length; i++) {
     let movie = movies[i]
     let movieData = await fetchMovie(movie)
 
@@ -45,9 +43,11 @@ async function fetchMovie (item) {
       movie.title = movieData.alt_title || movieData.title || ''
       movie.rawTitle = movieData.title || ''
 
-      if (movieData.attrs) {
-        movie.movieTypes = movieData.attrs.movie_type || []
-        movie.year = movieData.title || 2500
+      if (movieData.genres && !movies[i].category) {
+        movie.movieTypes = movieData.genres || []
+        movie.year = movieData.year || 2500
+
+        //  爬取来的数据缺少categori
 
         for (let i = 0;  i < movie.movieTypes.length; i++) {
           let item = movie.movieTypes[i]

@@ -20,23 +20,6 @@ const useMiddleware = app => {
   )(MIDDLEWARE)
 }
 
-// ;(async () => {
-//   await connect()
-
-//   initSchema()
-
-//   // await initAdmin()
-
-//   // require('./tasks/movie')
-//   // require('./tasks/api')
-
-//   const app = new Koa()
-//   await useMiddleware(app)
-
-// })()
-
-
-
 const app = new Koa()
 
 // Import and Set Nuxt.js options

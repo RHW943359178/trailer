@@ -1,3 +1,15 @@
 require('babel-core/register')()
 require('babel-polyfill')
-require('./server/index.js')
+
+const Movie = require()
+
+const { initSchema, connect } = require('./server/dbs/init')
+
+;(async () => {
+  initSchema()
+  await connect()
+
+  require('./server/tasks/api')
+})()
+
+
